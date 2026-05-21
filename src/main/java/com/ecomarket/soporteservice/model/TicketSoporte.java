@@ -10,17 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TicketSoporte {
-    /* 
-    - id: Long
-
-- clienteId: Long
-- empleadoAsignadoId: Long
-- pedidoRelacionadoId: Long
-- categoria: CategoriaTicket
-- asunto: String
-- estado: EstadoTicket
-- fechaCreacion: LocalDateTime
-- fechaCierre: LocalDateTime */
 
     private Long id;
     private Long empleadoAsignadoId;
