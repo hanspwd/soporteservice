@@ -6,4 +6,6 @@ import com.ecomarket.soporteservice.model.CategoriaTicket;
 
 public interface CategoriaTicketRepository extends JpaRepository<CategoriaTicket, Long>{
     
+    CategoriaTicket findByNombre(String nombre);
+
 }
