@@ -6,4 +6,5 @@ import com.ecomarket.soporteservice.model.CanalNotificacion;
 
 public interface CanalNotificacionRepository extends JpaRepository<CanalNotificacion, Long> {
     
+    CanalNotificacion findByNombre(String nombre);
 }

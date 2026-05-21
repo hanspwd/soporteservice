@@ -6,4 +6,5 @@ import com.ecomarket.soporteservice.model.EstadoTicket;
 
 public interface EstadoTicketRepository extends JpaRepository<EstadoTicket, Long>{
     
+    EstadoTicket findByNombre(String nombre);
 }
