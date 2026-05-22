@@ -1,10 +1,12 @@
 package com.ecomarket.soporteservice.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.ecomarket.soporteservice.model.CanalNotificacion;
 
 public interface CanalNotificacionRepository extends JpaRepository<CanalNotificacion, Long> {
     
-    CanalNotificacion findByNombre(String nombre);
+    Optional<CanalNotificacion> findByNombre(String nombre);
 }
