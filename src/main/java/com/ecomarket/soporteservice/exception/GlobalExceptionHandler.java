@@ -1,13 +1,19 @@
 package com.ecomarket.soporteservice.exception;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import com.ecomarket.soporteservice.model.dto.ErrorResponseDTO;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -23,19 +29,26 @@ public class GlobalExceptionHandler {
         return errorsMap;
     }
 
+    @ExceptionHandler(YaExisteEnBdException.class)
+    public ResponseEntity<ErrorResponseDTO> handleNoExistInDbException(YaExisteEnBdException ex, HttpServletRequest request) {
+        ErrorResponseDTO errorResponse = ErrorResponseDTO.builder()
+        .timestamp(LocalDateTime.now())
+        .status(HttpStatus.CONFLICT.value()).error(HttpStatus.CONFLICT.getReasonPhrase())
+        .message(ex.getMessage())
+        .path(request.getRequestURI())
+        .build();
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
 
-    /* Excepciones personalizadas template
-
-    @ExceptionHandler(NoExistInDbException.class)
-    public ResponseEntity<ErrorResponse> handleNoExistInDbException(NoExistInDbException ex, HttpServletRequest request) {
-        ErrorResponse errorResponse = ErrorResponse.builder()
+    @ExceptionHandler(NoExisteEnBdException.class)
+    public ResponseEntity<ErrorResponseDTO> handleNoExistInDbException(NoExisteEnBdException ex, HttpServletRequest request) {
+        ErrorResponseDTO errorResponse = ErrorResponseDTO.builder()
         .timestamp(LocalDateTime.now())
         .status(HttpStatus.NOT_FOUND.value()).error(HttpStatus.NOT_FOUND.getReasonPhrase())
         .message(ex.getMessage())
         .path(request.getRequestURI())
         .build();
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse    );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
-    */
-
+    
 }
