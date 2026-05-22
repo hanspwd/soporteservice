@@ -1,5 +1,7 @@
 package com.ecomarket.soporteservice.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,10 @@ public class CategoriaTicketService {
     
     @Autowired
     private CategoriaTicketRepository categoriaTicketRepository;
+
+    public List<CategoriaTicket> readAllCategoriaTicket() {
+        return categoriaTicketRepository.findAll();
+    }
 
     public CategoriaTicket createCategoriaTicket(CategoriaTicket categoriaTicket) {
         CategoriaTicket existente = categoriaTicketRepository.findByNombre(categoriaTicket.getNombre()).orElse(null);
