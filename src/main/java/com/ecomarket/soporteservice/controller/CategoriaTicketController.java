@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ecomarket.soporteservice.model.CategoriaTicket;
 import com.ecomarket.soporteservice.service.CategoriaTicketService;
 
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,7 +32,7 @@ public class CategoriaTicketController {
     }
 
     @PostMapping
-    public ResponseEntity<?> postCategoriaTicket(@RequestBody CategoriaTicket categoriaTicket) {
+    public ResponseEntity<?> postCategoriaTicket(@Valid @RequestBody CategoriaTicket categoriaTicket) {
         return ResponseEntity.status(201).body(categoriaTicketService.createCategoriaTicket(categoriaTicket));
     }
 
