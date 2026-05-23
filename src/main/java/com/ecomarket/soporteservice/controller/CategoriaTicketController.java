@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class CategoriaTicketController {
     
     @Autowired
-    CategoriaTicketService categoriaTicketService;
+    private CategoriaTicketService categoriaTicketService;
 
     @GetMapping
     public List<CategoriaTicket> getAllCategoriaTicket() {

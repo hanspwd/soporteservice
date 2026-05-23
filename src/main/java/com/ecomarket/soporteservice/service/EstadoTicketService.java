@@ -19,7 +19,7 @@ public class EstadoTicketService {
     @Autowired
     private EstadoTicketRepository estadoTicketRepository;
 
-    public List<EstadoTicket> findAllEstadoTicket() {
+    public List<EstadoTicket> readAllEstadoTicket() {
         return estadoTicketRepository.findAll();
     }
 
