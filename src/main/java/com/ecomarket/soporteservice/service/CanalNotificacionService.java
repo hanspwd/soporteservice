@@ -35,7 +35,7 @@ public class CanalNotificacionService {
         
         CanalNotificacion existente = canalNotificacionRepository.findById(id).orElse(null);
         if(existente == null) {
-            throw new NoExisteEnBdException("El canal notificacion con id" + id + " no se puede borrar debido a que no existe en la BD.");
+            throw new NoExisteEnBdException("El canal notificacion con id " + id + " no se puede borrar debido a que no existe en la BD.");
         }
         canalNotificacionRepository.deleteById(id);
     }
