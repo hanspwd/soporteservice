@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.ecomarket.soporteservice.exception.NoExisteEnBdException;
 import com.ecomarket.soporteservice.exception.YaExisteEnBdException;
-import com.ecomarket.soporteservice.model.CanalNotificacion;
 import com.ecomarket.soporteservice.model.EstadoTicket;
 import com.ecomarket.soporteservice.repository.EstadoTicketRepository;
 
