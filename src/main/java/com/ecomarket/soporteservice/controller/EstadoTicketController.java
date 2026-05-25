@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ecomarket.soporteservice.model.EstadoTicket;
+import com.ecomarket.soporteservice.model.reference.EstadoTicket;
 import com.ecomarket.soporteservice.service.EstadoTicketService;
 
 import jakarta.validation.Valid;

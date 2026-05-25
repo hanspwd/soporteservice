@@ -1,4 +1,4 @@
-package com.ecomarket.soporteservice.model.dto;
+package com.ecomarket.soporteservice.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

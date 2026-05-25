@@ -1,6 +1,8 @@
-package com.ecomarket.soporteservice.model;
+package com.ecomarket.soporteservice.model.entity;
 
 import java.time.LocalDateTime;
+
+import com.ecomarket.soporteservice.model.reference.CanalNotificacion;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

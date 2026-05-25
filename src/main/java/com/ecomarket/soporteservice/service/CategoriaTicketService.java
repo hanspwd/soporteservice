@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.ecomarket.soporteservice.exception.NoExisteEnBdException;
 import com.ecomarket.soporteservice.exception.YaExisteEnBdException;
-import com.ecomarket.soporteservice.model.CategoriaTicket;
+import com.ecomarket.soporteservice.model.reference.CategoriaTicket;
 import com.ecomarket.soporteservice.repository.CategoriaTicketRepository;
 
 import jakarta.transaction.Transactional;

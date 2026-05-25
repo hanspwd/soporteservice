@@ -1,4 +1,4 @@
-package com.ecomarket.soporteservice.model;
+package com.ecomarket.soporteservice.model.entity;
 
 import java.time.LocalDateTime;
 

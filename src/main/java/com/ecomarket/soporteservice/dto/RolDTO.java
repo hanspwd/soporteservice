@@ -1,4 +1,4 @@
-package com.ecomarket.soporteservice.model.dto;
+package com.ecomarket.soporteservice.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -6,9 +6,9 @@ import lombok.Data;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class EstadoPedidoDTO {
+public class RolDTO {
     
-    private Long idEstadoPedido;
+    private Long idRol;
     private String nombre;
 
 }

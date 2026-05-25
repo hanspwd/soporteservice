@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.ecomarket.soporteservice.model.CategoriaTicket;
+import com.ecomarket.soporteservice.model.reference.CategoriaTicket;
 
 public interface CategoriaTicketRepository extends JpaRepository<CategoriaTicket, Long>{
     

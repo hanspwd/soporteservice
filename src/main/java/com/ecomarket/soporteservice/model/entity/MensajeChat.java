@@ -1,6 +1,9 @@
-package com.ecomarket.soporteservice.model;
+package com.ecomarket.soporteservice.model.entity;
 
 import java.time.LocalDateTime;
+
+import com.ecomarket.soporteservice.model.reference.CategoriaTicket;
+import com.ecomarket.soporteservice.model.reference.EstadoTicket;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

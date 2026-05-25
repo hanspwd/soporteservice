@@ -1,4 +1,4 @@
-package com.ecomarket.soporteservice.model;
+package com.ecomarket.soporteservice.model.reference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,8 +14,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "canal_notificacion")
-public class CanalNotificacion {
+@Table(name = "estado_ticket")
+public class EstadoTicket {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
