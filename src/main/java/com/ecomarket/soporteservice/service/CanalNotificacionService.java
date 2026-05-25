@@ -39,5 +39,10 @@ public class CanalNotificacionService {
         }
         canalNotificacionRepository.deleteById(id);
     }
+
+    public CanalNotificacion getCanalNotificacionById(Long id) {
+        return canalNotificacionRepository.findById(id).orElseThrow(
+            () -> new NoExisteEnBdException("El canal notificacion con id " + id + " no existe en la DB."));
+    }
  
  }
