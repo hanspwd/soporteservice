@@ -38,7 +38,7 @@ public class NotificacionService {
         CanalNotificacion canalValido = canalNotificacionService.getCanalNotificacionById(canalId);
 
         // Obtenemos al destinatario por id
-        String url = "https://391e5de2-9437-485f-bf6d-ee78829ad0d2.mock.pstmn.io/clientes/" + destinatarioId;
+        String url = "http://localhost:8082/clientes/" + destinatarioId;
         Notificacion notificacion;
 
         try {
