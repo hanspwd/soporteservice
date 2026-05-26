@@ -22,7 +22,7 @@ import com.ecomarket.soporteservice.model.entity.MensajeChat;
 import com.ecomarket.soporteservice.model.entity.Notificacion;
 import com.ecomarket.soporteservice.model.entity.Resena;
 import com.ecomarket.soporteservice.model.entity.TicketSoporte;
-
+import com.ecomarket.soporteservice.service.CategoriaTicketService;
 import com.ecomarket.soporteservice.service.NotificacionService;
 import com.ecomarket.soporteservice.service.ResenaService;
 import com.ecomarket.soporteservice.service.SoporteService;
