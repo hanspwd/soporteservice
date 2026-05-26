@@ -1,6 +1,7 @@
 package com.ecomarket.soporteservice.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,6 +35,23 @@ public class TicketSoporteService {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    public List<TicketSoporte> readAllTickets() {
+        return ticketSoporteRepository.findAll();
+    }
+
+    public List<TicketSoporte> readTicketsByClienteId(Long clienteId) {
+        return ticketSoporteRepository.findByClienteId(clienteId);
+    }
+
+    public List<TicketSoporte> readTicketsByEstadoId(Long estadoId) {
+        return ticketSoporteRepository.findByEstadoId(estadoId);
+    }
+
+    public TicketSoporte findTicketById(Long id) {
+        return ticketSoporteRepository.findById(id)
+            .orElseThrow(() -> new NoExisteEnBdException("El ticket con id " + id + " no existe en la DB."));
+    }
 
     public TicketSoporte ingresarTicket(Long clienteId, Long categoriaId, String asunto, Long pedidoId) throws Exception {
 
@@ -79,10 +97,34 @@ public class TicketSoporteService {
         ticket.setPedidoRelacionadoId(pedidoId);
         ticket.setEstado(estadoValido);
 
-        // El empleado del area requerida tomara el ticket y se le asignara ahi. (OTRO METODO)
-        // ticket.setEmpleadoAsignadoId(null);
-
        return ticketSoporteRepository.save(ticket);
     }
 
+    public TicketSoporte actualizarEstadoTicket(Long ticketId, Long nuevoEstadoId) {
+        TicketSoporte ticket = ticketSoporteRepository.findById(ticketId)
+            .orElseThrow(() -> new NoExisteEnBdException("El ticket con id " + ticketId + " no existe en la DB."));
+        EstadoTicket nuevoEstado = estadoTicketService.findEstadoTicketById(nuevoEstadoId);
+        ticket.setEstado(nuevoEstado);
+
+        if (nuevoEstadoId == 4L || nuevoEstadoId == 5L) {
+            ticket.setFechaCierre(LocalDateTime.now());
+        }
+
+        return ticketSoporteRepository.save(ticket);
+    }
+
+    public TicketSoporte asignarEmpleado(Long ticketId, Long empleadoId) {
+        TicketSoporte ticket = ticketSoporteRepository.findById(ticketId)
+            .orElseThrow(() -> new NoExisteEnBdException("El ticket con id " + ticketId + " no existe en la DB."));
+        ticket.setEmpleadoAsignadoId(empleadoId);
+        return ticketSoporteRepository.save(ticket);
+    }
+
+    public void deleteTicketById(Long id) {
+        TicketSoporte existente = ticketSoporteRepository.findById(id).orElse(null);
+        if (existente == null) {
+            throw new NoExisteEnBdException("El ticket con id " + id + " no se puede borrar debido a que no existe en la BD.");
+        }
+        ticketSoporteRepository.deleteById(id);
+    }
 }

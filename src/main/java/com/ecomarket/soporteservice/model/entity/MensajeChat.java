@@ -2,17 +2,15 @@ package com.ecomarket.soporteservice.model.entity;
 
 import java.time.LocalDateTime;
 
-import com.ecomarket.soporteservice.model.reference.CategoriaTicket;
-import com.ecomarket.soporteservice.model.reference.EstadoTicket;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,35 +21,33 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "mensaje_chat")
 public class MensajeChat {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull(message = "El ID del ticket es obligatorio.")
     @Column(nullable = false)
-    private Long clienteId;
+    private Long ticketId;
 
+    @NotNull(message = "El ID del remitente es obligatorio.")
     @Column(nullable = false)
-    private Long empleadoAsignadoId;
+    private Long remitenteId;
 
+    @NotNull(message = "Debe indicar si el remitente es cliente.")
     @Column(nullable = false)
-    private Long pedidoRelacionadoId;
+    private Boolean esCliente;
 
-    @ManyToOne
-    @JoinColumn
-    private CategoriaTicket categoria;
+    @NotBlank(message = "El contenido del mensaje no puede estar vacio.")
+    @Size(min = 1, max = 2000, message = "El contenido debe tener entre 1 y 2000 caracteres.")
+    @Column(nullable = false, length = 2000)
+    private String contenido;
 
+    @NotNull(message = "La fecha de envio es obligatoria.")
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime fechaEnvio;
+
+    @NotNull(message = "Debe indicar si el mensaje fue leido.")
     @Column(nullable = false)
-    private String asunto;
-
-    @ManyToOne
-    @JoinColumn(name = "estado_id")
-    private EstadoTicket estado;
-
-    @Column(nullable = false)
-    private LocalDateTime fechaCreacion;
-
-    @Column(nullable = false)
-    private LocalDateTime fechaCierre;
-
+    private Boolean leido;
 }

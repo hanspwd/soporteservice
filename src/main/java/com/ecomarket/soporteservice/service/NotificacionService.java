@@ -9,6 +9,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import com.ecomarket.soporteservice.dto.ClienteDTO;
+import com.ecomarket.soporteservice.exception.NoExisteEnBdException;
 import com.ecomarket.soporteservice.model.entity.Notificacion;
 import com.ecomarket.soporteservice.model.reference.CanalNotificacion;
 import com.ecomarket.soporteservice.repository.NotificacionRepository;
@@ -30,6 +31,23 @@ public class NotificacionService {
 
     public List<Notificacion> readAllNotificacion() {
         return notificacionRepository.findAll();
+    }
+
+    public List<Notificacion> readNotificacionesByDestinatarioId(Long destinatarioId) {
+        return notificacionRepository.findByDestinatarioId(destinatarioId);
+    }
+
+    public Notificacion findNotificacionById(Long id) {
+        return notificacionRepository.findById(id)
+            .orElseThrow(() -> new NoExisteEnBdException("La notificacion con id " + id + " no existe en la DB."));
+    }
+
+    public void deleteNotificacionById(Long id) {
+        Notificacion existente = notificacionRepository.findById(id).orElse(null);
+        if (existente == null) {
+            throw new NoExisteEnBdException("La notificacion con id " + id + " no se puede borrar debido a que no existe en la BD.");
+        }
+        notificacionRepository.deleteById(id);
     }
 
     public Notificacion sendNotificacion(Long destinatarioId, String titulo, String mensaje, Long canalId) {
