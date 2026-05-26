@@ -28,21 +28,21 @@ public class MensajeChatController {
     private MensajeChatService mensajeChatService;
 
     @GetMapping
-    public List<MensajeChat> getAllMensajes(@RequestParam(required = false) Long ticketId) {
+    public List<MensajeChat> obtenerHistorialChat(@RequestParam(required = false) Long ticketId) {
         if (ticketId != null) {
-            return mensajeChatService.readMensajesByTicketId(ticketId);
+            return mensajeChatService.obtenerHistorialChat(ticketId);
         }
         return mensajeChatService.readAllMensajes();
     }
 
     @GetMapping("{id}")
-    public MensajeChat getMensajeById(@PathVariable Long id) {
+    public MensajeChat obtenerMensajePorId(@PathVariable Long id) {
         return mensajeChatService.findMensajeById(id);
     }
 
     @PostMapping
-    public ResponseEntity<?> postMensaje(@Valid @RequestBody MensajeChatRequestDTO dto) {
-        MensajeChat mensaje = mensajeChatService.enviarMensaje(
+    public ResponseEntity<MensajeChat> enviarMensajeChat(@Valid @RequestBody MensajeChatRequestDTO dto) {
+        MensajeChat mensaje = mensajeChatService.enviarMensajeChat(
             dto.getTicketId(), dto.getRemitenteId(), dto.getEsCliente(), dto.getContenido());
         return ResponseEntity.status(201).body(mensaje);
     }
@@ -60,7 +60,7 @@ public class MensajeChatController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteMensajeById(@PathVariable Long id) {
+    public ResponseEntity<String> eliminarMensaje(@PathVariable Long id) {
         mensajeChatService.deleteMensajeById(id);
         return ResponseEntity.ok("El mensaje con id " + id + " ha sido eliminado con exito.");
     }

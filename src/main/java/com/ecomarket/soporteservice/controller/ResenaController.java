@@ -46,8 +46,8 @@ public class ResenaController {
     }
 
     @PostMapping
-    public ResponseEntity<?> postResena(@Valid @RequestBody ResenaRequestDTO dto) {
-        Resena resena = resenaService.crearResena(
+    public ResponseEntity<Resena> dejarResena(@Valid @RequestBody ResenaRequestDTO dto) {
+        Resena resena = resenaService.dejarResena(
             dto.getProductoId(), dto.getClienteId(), dto.getCalificacionEstrellas(), dto.getComentario());
         return ResponseEntity.status(201).body(resena);
     }

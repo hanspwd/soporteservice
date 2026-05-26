@@ -1,5 +1,7 @@
 package com.ecomarket.soporteservice.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -7,6 +9,7 @@ import com.ecomarket.soporteservice.model.entity.MensajeChat;
 import com.ecomarket.soporteservice.model.entity.Notificacion;
 import com.ecomarket.soporteservice.model.entity.Resena;
 import com.ecomarket.soporteservice.model.entity.TicketSoporte;
+import com.ecomarket.soporteservice.model.reference.CategoriaTicket;
 
 import jakarta.transaction.Transactional;
 
@@ -30,15 +33,27 @@ public class SoporteService {
         return notificacionService.sendNotificacion(destinatarioId, titulo, mensaje, canalId);
     }
 
-    public TicketSoporte ingresarTicket(Long clienteId, Long categoriaId, String asunto, Long pedidoId) throws Exception {
-        return ticketSoporteService.ingresarTicket(clienteId, categoriaId, asunto, pedidoId);
+    public TicketSoporte ingresarTicket(Long clienteId, CategoriaTicket categoria, String asunto, Long pedidoId) throws Exception {
+        return ticketSoporteService.ingresarTicket(clienteId, categoria, asunto, pedidoId);
+    }
+
+    public TicketSoporte asignarTicketEmpleado(Long ticketId, Long empleadoId) {
+        return ticketSoporteService.asignarTicketEmpleado(ticketId, empleadoId);
     }
 
     public MensajeChat enviarMensajeChat(Long ticketId, Long remitenteId, Boolean esCliente, String contenido) {
-        return mensajeChatService.enviarMensaje(ticketId, remitenteId, esCliente, contenido);
+        return mensajeChatService.enviarMensajeChat(ticketId, remitenteId, esCliente, contenido);
     }
 
-    public Resena crearResena(Long productoId, Long clienteId, Integer calificacionEstrellas, String comentario) {
-        return resenaService.crearResena(productoId, clienteId, calificacionEstrellas, comentario);
+    public List<MensajeChat> obtenerHistorialChat(Long ticketId) {
+        return mensajeChatService.obtenerHistorialChat(ticketId);
+    }
+
+    public TicketSoporte solucionarTicket(Long ticketId, String solucionResumen) {
+        return ticketSoporteService.solucionarTicket(ticketId, solucionResumen);
+    }
+
+    public Resena dejarResena(Long productoId, Long clienteId, Integer calificacion, String comentario) {
+        return resenaService.dejarResena(productoId, clienteId, calificacion, comentario);
     }
 }

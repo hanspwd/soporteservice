@@ -23,11 +23,11 @@ public class MensajeChatService {
         return mensajeChatRepository.findAll();
     }
 
-    public List<MensajeChat> readMensajesByTicketId(Long ticketId) {
+    public List<MensajeChat> obtenerHistorialChat(Long ticketId) {
         return mensajeChatRepository.findByTicketIdOrderByFechaEnvioAsc(ticketId);
     }
 
-    public MensajeChat enviarMensaje(Long ticketId, Long remitenteId, Boolean esCliente, String contenido) {
+    public MensajeChat enviarMensajeChat(Long ticketId, Long remitenteId, Boolean esCliente, String contenido) {
         MensajeChat mensaje = new MensajeChat();
         mensaje.setTicketId(ticketId);
         mensaje.setRemitenteId(remitenteId);
@@ -46,7 +46,7 @@ public class MensajeChatService {
     }
 
     public void marcarTodosComoLeidos(Long ticketId) {
-        List<MensajeChat> mensajes = mensajeChatRepository.findByTicketIdOrderByFechaEnvioAsc(ticketId);
+        List<MensajeChat> mensajes = obtenerHistorialChat(ticketId);
         mensajes.forEach(m -> m.setLeido(true));
         mensajeChatRepository.saveAll(mensajes);
     }

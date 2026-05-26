@@ -22,6 +22,8 @@ import com.ecomarket.soporteservice.model.entity.MensajeChat;
 import com.ecomarket.soporteservice.model.entity.Notificacion;
 import com.ecomarket.soporteservice.model.entity.Resena;
 import com.ecomarket.soporteservice.model.entity.TicketSoporte;
+import com.ecomarket.soporteservice.model.reference.CategoriaTicket;
+import com.ecomarket.soporteservice.service.CategoriaTicketService;
 import com.ecomarket.soporteservice.service.MensajeChatService;
 import com.ecomarket.soporteservice.service.NotificacionService;
 import com.ecomarket.soporteservice.service.ResenaService;
@@ -38,6 +40,9 @@ public class SoporteController {
     private SoporteService soporteService;
 
     @Autowired
+    private CategoriaTicketService categoriaTicketService;
+
+    @Autowired
     private TicketSoporteService ticketSoporteService;
 
     @Autowired
@@ -50,21 +55,22 @@ public class SoporteController {
     private NotificacionService notificacionService;
 
     @PostMapping("enviar-notificacion-push")
-    public ResponseEntity<Notificacion> postNotificacionPush(@Valid @RequestBody NotificacionRequestDTO dto) {
+    public ResponseEntity<Notificacion> enviarNotificacionPush(@Valid @RequestBody NotificacionRequestDTO dto) {
         Notificacion notificacion = soporteService.enviarNotificacionPush(
             dto.getDestinatarioId(), dto.getTitulo(), dto.getMensaje(), dto.getCanalId());
         return ResponseEntity.ok(notificacion);
     }
 
     @PostMapping("ingresar-ticket")
-    public ResponseEntity<TicketSoporte> postTicket(@Valid @RequestBody SoporteTicketRequestDTO dto) throws Exception {
+    public ResponseEntity<TicketSoporte> ingresarTicket(@Valid @RequestBody SoporteTicketRequestDTO dto) throws Exception {
+        CategoriaTicket categoria = categoriaTicketService.findCategoriaTicketById(dto.getCategoriaId());
         TicketSoporte ticket = soporteService.ingresarTicket(
-            dto.getClienteId(), dto.getCategoriaId(), dto.getAsunto(), dto.getPedidoId());
+            dto.getClienteId(), categoria, dto.getAsunto(), dto.getPedidoId());
         return ResponseEntity.ok(ticket);
     }
 
     @GetMapping("tickets")
-    public List<TicketSoporte> getTickets(
+    public List<TicketSoporte> obtenerTickets(
             @RequestParam(required = false) Long clienteId,
             @RequestParam(required = false) Long estadoId) {
         if (clienteId != null) {
@@ -77,7 +83,7 @@ public class SoporteController {
     }
 
     @GetMapping("tickets/{id}")
-    public TicketSoporte getTicketById(@PathVariable Long id) {
+    public TicketSoporte obtenerTicketPorId(@PathVariable Long id) {
         return ticketSoporteService.findTicketById(id);
     }
 
@@ -89,32 +95,39 @@ public class SoporteController {
     }
 
     @PatchMapping("tickets/{id}/asignar/{empleadoId}")
-    public ResponseEntity<TicketSoporte> asignarEmpleado(
+    public ResponseEntity<TicketSoporte> asignarTicketEmpleado(
             @PathVariable Long id, @PathVariable Long empleadoId) {
-        TicketSoporte ticket = ticketSoporteService.asignarEmpleado(id, empleadoId);
+        TicketSoporte ticket = soporteService.asignarTicketEmpleado(id, empleadoId);
+        return ResponseEntity.ok(ticket);
+    }
+
+    @PatchMapping("tickets/{id}/solucionar")
+    public ResponseEntity<TicketSoporte> solucionarTicket(
+            @PathVariable Long id, @RequestBody String solucionResumen) {
+        TicketSoporte ticket = soporteService.solucionarTicket(id, solucionResumen);
         return ResponseEntity.ok(ticket);
     }
 
     @DeleteMapping("tickets/{id}")
-    public ResponseEntity<String> deleteTicket(@PathVariable Long id) {
+    public ResponseEntity<String> eliminarTicket(@PathVariable Long id) {
         ticketSoporteService.deleteTicketById(id);
         return ResponseEntity.ok("El ticket con id " + id + " ha sido eliminado con exito.");
     }
 
     @GetMapping("tickets/{id}/mensajes")
-    public List<MensajeChat> getMensajesByTicket(@PathVariable Long id) {
-        return mensajeChatService.readMensajesByTicketId(id);
+    public List<MensajeChat> obtenerHistorialChat(@PathVariable Long id) {
+        return soporteService.obtenerHistorialChat(id);
     }
 
-    @PostMapping("mensajes-chat")
-    public ResponseEntity<MensajeChat> postMensaje(@Valid @RequestBody MensajeChatRequestDTO dto) {
-        MensajeChat mensaje = mensajeChatService.enviarMensaje(
+    @PostMapping("enviar-mensaje-chat")
+    public ResponseEntity<MensajeChat> enviarMensajeChat(@Valid @RequestBody MensajeChatRequestDTO dto) {
+        MensajeChat mensaje = soporteService.enviarMensajeChat(
             dto.getTicketId(), dto.getRemitenteId(), dto.getEsCliente(), dto.getContenido());
         return ResponseEntity.status(201).body(mensaje);
     }
 
     @GetMapping("notificaciones")
-    public List<Notificacion> getNotificaciones(
+    public List<Notificacion> obtenerNotificaciones(
             @RequestParam(required = false) Long destinatarioId) {
         if (destinatarioId != null) {
             return notificacionService.readNotificacionesByDestinatarioId(destinatarioId);
@@ -123,25 +136,25 @@ public class SoporteController {
     }
 
     @GetMapping("notificaciones/{id}")
-    public Notificacion getNotificacionById(@PathVariable Long id) {
+    public Notificacion obtenerNotificacionPorId(@PathVariable Long id) {
         return notificacionService.findNotificacionById(id);
     }
 
     @DeleteMapping("notificaciones/{id}")
-    public ResponseEntity<String> deleteNotificacion(@PathVariable Long id) {
+    public ResponseEntity<String> eliminarNotificacion(@PathVariable Long id) {
         notificacionService.deleteNotificacionById(id);
         return ResponseEntity.ok("La notificacion con id " + id + " ha sido eliminada con exito.");
     }
 
-    @PostMapping("resenas")
-    public ResponseEntity<Resena> postResena(@Valid @RequestBody ResenaRequestDTO dto) {
-        Resena resena = resenaService.crearResena(
+    @PostMapping("dejar-resena")
+    public ResponseEntity<Resena> dejarResena(@Valid @RequestBody ResenaRequestDTO dto) {
+        Resena resena = soporteService.dejarResena(
             dto.getProductoId(), dto.getClienteId(), dto.getCalificacionEstrellas(), dto.getComentario());
         return ResponseEntity.status(201).body(resena);
     }
 
     @GetMapping("resenas")
-    public List<Resena> getResenas(
+    public List<Resena> obtenerResenas(
             @RequestParam(required = false) Long productoId,
             @RequestParam(required = false) Long clienteId) {
         if (productoId != null) {
@@ -166,7 +179,7 @@ public class SoporteController {
     }
 
     @DeleteMapping("resenas/{id}")
-    public ResponseEntity<String> deleteResena(@PathVariable Long id) {
+    public ResponseEntity<String> eliminarResena(@PathVariable Long id) {
         resenaService.deleteResenaById(id);
         return ResponseEntity.ok("La resena con id " + id + " ha sido eliminada con exito.");
     }

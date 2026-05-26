@@ -31,11 +31,11 @@ public class ResenaService {
         return resenaRepository.findByClienteId(clienteId);
     }
 
-    public Resena crearResena(Long productoId, Long clienteId, Integer calificacionEstrellas, String comentario) {
+    public Resena dejarResena(Long productoId, Long clienteId, Integer calificacion, String comentario) {
         Resena resena = new Resena();
         resena.setProductoId(productoId);
         resena.setClienteId(clienteId);
-        resena.setCalificacionEstrellas(calificacionEstrellas);
+        resena.setCalificacionEstrellas(calificacion);
         resena.setComentario(comentario.trim());
         resena.setFechaPublicacion(LocalDateTime.now());
         resena.setModeracionAprobado(false);

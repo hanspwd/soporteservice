@@ -53,12 +53,9 @@ public class TicketSoporteService {
             .orElseThrow(() -> new NoExisteEnBdException("El ticket con id " + id + " no existe en la DB."));
     }
 
-    public TicketSoporte ingresarTicket(Long clienteId, Long categoriaId, String asunto, Long pedidoId) throws Exception {
+    public TicketSoporte ingresarTicket(Long clienteId, CategoriaTicket categoria, String asunto, Long pedidoId) throws Exception {
 
-        // Traer excepcion de estado o de categoria en caso de que se ingrese uno inexistente
-        // DEFAULT AL APENAS ABRIR TICKET (ABIERTO)
         EstadoTicket estadoValido = estadoTicketService.findEstadoTicketById(1L);
-        CategoriaTicket categoriaValida = categoriaTicketService.findCategoriaTicketById(categoriaId);
 
         // verificar existencia de cliente
         String urlCliente = "http://mock-server:8082/clientes/" + clienteId;
@@ -91,7 +88,7 @@ public class TicketSoporteService {
 
         TicketSoporte ticket = new TicketSoporte();
         ticket.setClienteId(clienteId);
-        ticket.setCategoria(categoriaValida);
+        ticket.setCategoria(categoria);
         ticket.setAsunto(asunto.trim());
         ticket.setFechaCreacion(LocalDateTime.now());
         ticket.setPedidoRelacionadoId(pedidoId);
@@ -113,10 +110,20 @@ public class TicketSoporteService {
         return ticketSoporteRepository.save(ticket);
     }
 
-    public TicketSoporte asignarEmpleado(Long ticketId, Long empleadoId) {
+    public TicketSoporte asignarTicketEmpleado(Long ticketId, Long empleadoId) {
         TicketSoporte ticket = ticketSoporteRepository.findById(ticketId)
             .orElseThrow(() -> new NoExisteEnBdException("El ticket con id " + ticketId + " no existe en la DB."));
         ticket.setEmpleadoAsignadoId(empleadoId);
+        return ticketSoporteRepository.save(ticket);
+    }
+
+    public TicketSoporte solucionarTicket(Long ticketId, String solucionResumen) {
+        TicketSoporte ticket = ticketSoporteRepository.findById(ticketId)
+            .orElseThrow(() -> new NoExisteEnBdException("El ticket con id " + ticketId + " no existe en la DB."));
+        EstadoTicket estadoResuelto = estadoTicketService.findEstadoTicketById(4L);
+        ticket.setEstado(estadoResuelto);
+        ticket.setSolucionResumen(solucionResumen);
+        ticket.setFechaCierre(LocalDateTime.now());
         return ticketSoporteRepository.save(ticket);
     }
 

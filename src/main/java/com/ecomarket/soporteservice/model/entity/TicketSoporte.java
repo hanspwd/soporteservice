@@ -63,4 +63,7 @@ public class TicketSoporte {
 
     @Column(nullable = true)
     private LocalDateTime fechaCierre;
+
+    @Column(nullable = true, length = 2000)
+    private String solucionResumen;
 }
