@@ -3,9 +3,12 @@ package com.ecomarket.soporteservice.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import com.ecomarket.soporteservice.dto.ClienteDTO;
@@ -28,6 +31,8 @@ public class NotificacionService {
 
     @Autowired
     private CanalNotificacionService canalNotificacionService;
+
+    private static final Logger log = LoggerFactory.getLogger(NotificacionService.class);
 
     public List<Notificacion> readAllNotificacion() {
         return notificacionRepository.findAll();
@@ -69,8 +74,13 @@ public class NotificacionService {
 
         notificacion = new Notificacion(null, destinatarioId, canalValido, titulo, mensaje, LocalDateTime.now(), true);
         } catch (HttpClientErrorException.NotFound exNotFound) {
+            log.warn("Destinatario {} no encontrado, notificacion marcada como no enviada.", destinatarioId);
+            notificacion = new Notificacion(null, destinatarioId, canalValido, titulo, mensaje, LocalDateTime.now(), false);
+        } catch (ResourceAccessException e) {
+            log.warn("Servicio de usuarios no disponible al enviar notificacion a {}: {}", destinatarioId, e.getMessage());
             notificacion = new Notificacion(null, destinatarioId, canalValido, titulo, mensaje, LocalDateTime.now(), false);
         } catch (Exception ex) {
+            log.error("Error inesperado al validar destinatario {}: {}", destinatarioId, ex.getMessage());
             notificacion = new Notificacion(null, destinatarioId, canalValido, titulo, mensaje, LocalDateTime.now(), false);
         }
         return notificacionRepository.save(notificacion);

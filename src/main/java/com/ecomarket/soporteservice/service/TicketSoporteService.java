@@ -3,10 +3,13 @@ package com.ecomarket.soporteservice.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import com.ecomarket.soporteservice.dto.ClienteDTO;
@@ -36,6 +39,8 @@ public class TicketSoporteService {
     @Autowired
     private RestTemplate restTemplate;
 
+    private static final Logger log = LoggerFactory.getLogger(TicketSoporteService.class);
+
     public List<TicketSoporte> readAllTickets() {
         return ticketSoporteRepository.findAll();
     }
@@ -60,12 +65,15 @@ public class TicketSoporteService {
 
         // verificar existencia de cliente
         String urlCliente = "http://mock-server:8082/clientes/" + clienteId;
-        
+
         try {
         @SuppressWarnings("unused")
         ClienteDTO cliente = restTemplate.getForObject(urlCliente, ClienteDTO.class);
         } catch (HttpClientErrorException.NotFound exNotFound) {
             throw new NoExisteEnBdException("No se puede ingresar el ticket debido a que el id del cliente ingresado no existe en DB.");
+        } catch (ResourceAccessException e) {
+            log.warn("Servicio de clientes no disponible al validar cliente {}: {}", clienteId, e.getMessage());
+            throw new NoExisteEnBdException("No se pudo validar el cliente debido a que el servicio de usuarios no esta disponible.");
         }
 
         // verificar existencia de pedido
@@ -84,7 +92,11 @@ public class TicketSoporteService {
                 throw new NoExisteEnBdException("No se puede ingresar el ticket debido a que el id del pedido ingresado no existe en DB.");
             }
 
+            log.error("Error HTTP inesperado al validar pedido {}: {}", pedidoId, ex.getStatusCode());
             throw new Exception();
+        } catch (ResourceAccessException e) {
+            log.warn("Servicio de pedidos no disponible al validar pedido {}: {}", pedidoId, e.getMessage());
+            throw new NoExisteEnBdException("No se pudo validar el pedido debido a que el servicio de pedidos no esta disponible.");
         }
 
         TicketSoporte ticket = new TicketSoporte();
