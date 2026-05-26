@@ -23,6 +23,11 @@ public class CategoriaTicketService {
         return categoriaTicketRepository.findAll();
     }
 
+    public CategoriaTicket findCategoriaTicketById(Long id) {
+        return categoriaTicketRepository.findById(id).orElseThrow(
+            () -> new NoExisteEnBdException("La categoria de ticket con id " + id + " no existe en la DB."));
+    }
+
     public CategoriaTicket createCategoriaTicket(CategoriaTicket categoriaTicket) {
         CategoriaTicket existente = categoriaTicketRepository.findByNombre(categoriaTicket.getNombre()).orElse(null);
         if(existente != null) {

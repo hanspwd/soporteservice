@@ -23,6 +23,11 @@ public class EstadoTicketService {
         return estadoTicketRepository.findAll();
     }
 
+    public EstadoTicket findEstadoTicketById(Long id) {
+        return estadoTicketRepository.findById(id).orElseThrow(
+            () -> new NoExisteEnBdException("El estado ticket con id " + id + " no existe en la DB."));
+    }
+
     public EstadoTicket createEstadoTicket(EstadoTicket estadoTicket) {
         EstadoTicket existente = estadoTicketRepository.findByNombre(estadoTicket.getNombre()).orElse(null);
         if(existente != null) {

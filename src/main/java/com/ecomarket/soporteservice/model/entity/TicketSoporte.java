@@ -29,6 +29,9 @@ public class TicketSoporte {
     private Long id;
 
     @Column(nullable = false)
+    private Long clienteId;
+
+    @Column(nullable = false)
     private Long empleadoAsignadoId;
 
     @Column(nullable = false)
