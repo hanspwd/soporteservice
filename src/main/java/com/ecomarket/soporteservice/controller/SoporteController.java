@@ -6,7 +6,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ecomarket.soporteservice.dto.NotificacionRequestDTO;
+import com.ecomarket.soporteservice.dto.SoporteTicketRequestDTO;
 import com.ecomarket.soporteservice.model.entity.Notificacion;
+import com.ecomarket.soporteservice.model.entity.TicketSoporte;
 import com.ecomarket.soporteservice.service.SoporteService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,5 +27,14 @@ public class SoporteController {
 
         return ResponseEntity.ok(notificacion);
     }
+
+    @PostMapping("ingresar-ticket")
+    public ResponseEntity<?> postTicket(@RequestBody SoporteTicketRequestDTO soporteTicketRequestDTO) throws Exception {
+         TicketSoporte ticket = soporteService.ingresarTicket(soporteTicketRequestDTO.getClienteId(),
+          soporteTicketRequestDTO.getCategoriaId(), soporteTicketRequestDTO.getAsunto(), soporteTicketRequestDTO.getPedidoId());
+        
+          return ResponseEntity.ok(ticket);
+    }
+    
     
 }

@@ -20,7 +20,6 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/v1/estado-ticket")
 public class EstadoTicketController {
-    
         
     @Autowired
     private EstadoTicketService estadoTicketService;

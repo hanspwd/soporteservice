@@ -31,7 +31,7 @@ public class TicketSoporte {
     @Column(nullable = false)
     private Long clienteId;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Long empleadoAsignadoId;
 
     @Column(nullable = false)
@@ -51,6 +51,6 @@ public class TicketSoporte {
     @Column(nullable = false)
     private LocalDateTime fechaCreacion;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private LocalDateTime fechaCierre; 
 }

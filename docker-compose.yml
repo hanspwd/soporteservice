@@ -1,0 +1,41 @@
+version: '3.8'
+
+networks:
+  red-microservicios:
+    driver: bridge
+
+services:
+  # Microservicio API Soporte
+  soporte-api:
+    build: .
+    container_name: api_soporte_java
+    ports:
+      - "8081:8080"
+    networks:
+      - red-microservicios
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://soporte-db:3306/soporte_db?allowPublicKeyRetrieval=true&useSSL=false
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root_pass
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    depends_on:
+      soporte-db:
+        condition: service_healthy # <--- ESTO ES NUEVO: Espera a que la BD esté saludable
+
+  # Base de Datos MySQL para Soporte
+  soporte-db:
+    image: mysql:8.0
+    container_name: db_soporte
+    networks:
+      - red-microservicios
+    environment:
+      MYSQL_ROOT_PASSWORD: root_pass
+      MYSQL_DATABASE: soporte_db
+    ports:
+      - "3306:3306"
+    # ---> ESTO ES NUEVO: Docker hará un "ping" a MySQL hasta que responda
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
