@@ -29,7 +29,7 @@ public class SoporteController {
     }
 
     @PostMapping("ingresar-ticket")
-    public ResponseEntity<?> postTicket(@RequestBody SoporteTicketRequestDTO soporteTicketRequestDTO) {
+    public ResponseEntity<?> postTicket(@RequestBody SoporteTicketRequestDTO soporteTicketRequestDTO) throws Exception {
          TicketSoporte ticket = soporteService.ingresarTicket(soporteTicketRequestDTO.getClienteId(),
           soporteTicketRequestDTO.getCategoriaId(), soporteTicketRequestDTO.getAsunto(), soporteTicketRequestDTO.getPedidoId());
         

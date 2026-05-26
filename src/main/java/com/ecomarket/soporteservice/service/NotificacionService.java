@@ -38,7 +38,7 @@ public class NotificacionService {
         CanalNotificacion canalValido = canalNotificacionService.getCanalNotificacionById(canalId);
 
         // Obtenemos al destinatario por id
-        String url = "http://localhost:8082/clientes/" + destinatarioId;
+        String url = "http://mock-server:8082/clientes/" + destinatarioId;
         Notificacion notificacion;
 
         try {

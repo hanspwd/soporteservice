@@ -3,6 +3,7 @@ package com.ecomarket.soporteservice.service;
 import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -10,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import com.ecomarket.soporteservice.dto.ClienteDTO;
 import com.ecomarket.soporteservice.dto.PedidoDTO;
 import com.ecomarket.soporteservice.exception.NoExisteEnBdException;
+import com.ecomarket.soporteservice.exception.PedidoClienteIncompatibleException;
 import com.ecomarket.soporteservice.model.entity.TicketSoporte;
 import com.ecomarket.soporteservice.model.reference.CategoriaTicket;
 import com.ecomarket.soporteservice.model.reference.EstadoTicket;
@@ -33,7 +35,7 @@ public class TicketSoporteService {
     @Autowired
     private RestTemplate restTemplate;
 
-    public TicketSoporte ingresarTicket(Long clienteId, Long categoriaId, String asunto, Long pedidoId) {
+    public TicketSoporte ingresarTicket(Long clienteId, Long categoriaId, String asunto, Long pedidoId) throws Exception {
 
         // Traer excepcion de estado o de categoria en caso de que se ingrese uno inexistente
         // DEFAULT AL APENAS ABRIR TICKET (ABIERTO)
@@ -41,7 +43,7 @@ public class TicketSoporteService {
         CategoriaTicket categoriaValida = categoriaTicketService.findCategoriaTicketById(categoriaId);
 
         // verificar existencia de cliente
-        String urlCliente = "http://localhost:8082/clientes/" + clienteId;
+        String urlCliente = "http://mock-server:8082/clientes/" + clienteId;
         
         try {
         @SuppressWarnings("unused")
@@ -51,18 +53,23 @@ public class TicketSoporteService {
         }
 
         // verificar existencia de pedido
-        String urlPedido = "http://localhost:8082/pedidos/" + pedidoId;
+        String urlPedido = "http://mock-server:8082/pedidos/" + pedidoId;
 
         try {
             PedidoDTO pedido = restTemplate.getForObject(urlPedido, PedidoDTO.class);
 
             if(pedido != null && !pedido.getClienteId().equals(clienteId)) {
-                throw new IllegalArgumentException("El pedido ingresado no pertenece al cliente que esta creando el ticket.");
+                throw new PedidoClienteIncompatibleException("No se puede ingresar el ticket debido a que el ID del pedido no es compatible con el cliente asignado a ese pedido.");
             }
 
-        } catch (HttpClientErrorException exNotFound) {
-            throw new NoExisteEnBdException("No se puede ingresar el ticket debido a que el id del pedido ingresado no existe en DB.");
-        } 
+        } catch (HttpClientErrorException ex) {
+
+            if(ex.getStatusCode() == HttpStatus.NOT_FOUND) {
+                throw new NoExisteEnBdException("No se puede ingresar el ticket debido a que el id del pedido ingresado no existe en DB.");
+            }
+
+            throw new Exception();
+        }
 
         TicketSoporte ticket = new TicketSoporte();
         ticket.setClienteId(clienteId);

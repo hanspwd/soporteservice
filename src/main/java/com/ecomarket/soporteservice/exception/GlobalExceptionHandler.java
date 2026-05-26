@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
 
     // CAPTURA ERRORES DE CAPA DE SERVICIO (REGLAS DE NEGOCIO)
     @ExceptionHandler(YaExisteEnBdException.class)
-    public ResponseEntity<ErrorResponseDTO> handleNoExistInDbException(YaExisteEnBdException ex, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponseDTO> handleYaExisteEnDBException(YaExisteEnBdException ex, HttpServletRequest request) {
         ErrorResponseDTO errorResponse = ErrorResponseDTO.builder()
         .timestamp(LocalDateTime.now())
         .status(HttpStatus.CONFLICT.value()).error(HttpStatus.CONFLICT.getReasonPhrase())
@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NoExisteEnBdException.class)
-    public ResponseEntity<ErrorResponseDTO> handleNoExistInDbException(NoExisteEnBdException ex, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponseDTO> handleNoExisteEnDBException(NoExisteEnBdException ex, HttpServletRequest request) {
         ErrorResponseDTO errorResponse = ErrorResponseDTO.builder()
         .timestamp(LocalDateTime.now())
         .status(HttpStatus.NOT_FOUND.value()).error(HttpStatus.NOT_FOUND.getReasonPhrase())
@@ -42,6 +42,17 @@ public class GlobalExceptionHandler {
         .path(request.getRequestURI())
         .build();
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(PedidoClienteIncompatibleException.class)
+    public ResponseEntity<ErrorResponseDTO> handlePedidoClienteIncompatibleException(PedidoClienteIncompatibleException ex, HttpServletRequest request) {
+        ErrorResponseDTO errorResponse = ErrorResponseDTO.builder()
+        .timestamp(LocalDateTime.now())
+        .status(HttpStatus.CONFLICT.value()).error(HttpStatus.CONFLICT.getReasonPhrase())
+        .message(ex.getMessage())
+        .path(request.getRequestURI())
+        .build();
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
     }
 
     // CAPTURA ERRORES DE VALIDACION (SIRVE PARA MOSTRARLE LOS ERRORES AL CLIENTE)
