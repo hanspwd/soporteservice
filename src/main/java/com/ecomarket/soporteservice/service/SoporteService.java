@@ -9,7 +9,7 @@ import com.ecomarket.soporteservice.model.entity.MensajeChat;
 import com.ecomarket.soporteservice.model.entity.Notificacion;
 import com.ecomarket.soporteservice.model.entity.Resena;
 import com.ecomarket.soporteservice.model.entity.TicketSoporte;
-import com.ecomarket.soporteservice.model.reference.CategoriaTicket;
+
 
 import jakarta.transaction.Transactional;
 
@@ -33,8 +33,8 @@ public class SoporteService {
         return notificacionService.sendNotificacion(destinatarioId, titulo, mensaje, canalId);
     }
 
-    public TicketSoporte ingresarTicket(Long clienteId, CategoriaTicket categoria, String asunto, Long pedidoId) throws Exception {
-        return ticketSoporteService.ingresarTicket(clienteId, categoria, asunto, pedidoId);
+    public TicketSoporte ingresarTicket(Long clienteId, Long categoriaId, String asunto, Long pedidoId) throws Exception {
+        return ticketSoporteService.ingresarTicket(clienteId, categoriaId, asunto, pedidoId);
     }
 
     public TicketSoporte asignarTicketEmpleado(Long ticketId, Long empleadoId) {

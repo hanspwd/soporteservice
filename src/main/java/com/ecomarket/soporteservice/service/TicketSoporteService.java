@@ -53,9 +53,10 @@ public class TicketSoporteService {
             .orElseThrow(() -> new NoExisteEnBdException("El ticket con id " + id + " no existe en la DB."));
     }
 
-    public TicketSoporte ingresarTicket(Long clienteId, CategoriaTicket categoria, String asunto, Long pedidoId) throws Exception {
+    public TicketSoporte ingresarTicket(Long clienteId, Long categoriaId, String asunto, Long pedidoId) throws Exception {
 
         EstadoTicket estadoValido = estadoTicketService.findEstadoTicketById(1L);
+        CategoriaTicket categoria = categoriaTicketService.findCategoriaTicketById(categoriaId);
 
         // verificar existencia de cliente
         String urlCliente = "http://mock-server:8082/clientes/" + clienteId;

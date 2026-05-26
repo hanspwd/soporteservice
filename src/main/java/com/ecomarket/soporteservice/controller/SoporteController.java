@@ -22,9 +22,7 @@ import com.ecomarket.soporteservice.model.entity.MensajeChat;
 import com.ecomarket.soporteservice.model.entity.Notificacion;
 import com.ecomarket.soporteservice.model.entity.Resena;
 import com.ecomarket.soporteservice.model.entity.TicketSoporte;
-import com.ecomarket.soporteservice.model.reference.CategoriaTicket;
-import com.ecomarket.soporteservice.service.CategoriaTicketService;
-import com.ecomarket.soporteservice.service.MensajeChatService;
+
 import com.ecomarket.soporteservice.service.NotificacionService;
 import com.ecomarket.soporteservice.service.ResenaService;
 import com.ecomarket.soporteservice.service.SoporteService;
@@ -40,13 +38,7 @@ public class SoporteController {
     private SoporteService soporteService;
 
     @Autowired
-    private CategoriaTicketService categoriaTicketService;
-
-    @Autowired
     private TicketSoporteService ticketSoporteService;
-
-    @Autowired
-    private MensajeChatService mensajeChatService;
 
     @Autowired
     private ResenaService resenaService;
@@ -63,9 +55,8 @@ public class SoporteController {
 
     @PostMapping("ingresar-ticket")
     public ResponseEntity<TicketSoporte> ingresarTicket(@Valid @RequestBody SoporteTicketRequestDTO dto) throws Exception {
-        CategoriaTicket categoria = categoriaTicketService.findCategoriaTicketById(dto.getCategoriaId());
         TicketSoporte ticket = soporteService.ingresarTicket(
-            dto.getClienteId(), categoria, dto.getAsunto(), dto.getPedidoId());
+            dto.getClienteId(), dto.getCategoriaId(), dto.getAsunto(), dto.getPedidoId());
         return ResponseEntity.ok(ticket);
     }
 
