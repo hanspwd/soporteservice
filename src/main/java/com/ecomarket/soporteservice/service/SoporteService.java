@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ecomarket.soporteservice.model.entity.Notificacion;
+import com.ecomarket.soporteservice.model.entity.TicketSoporte;
 
 import jakarta.transaction.Transactional;
 
@@ -14,8 +15,16 @@ public class SoporteService {
     @Autowired
     private NotificacionService notificacionService;
 
+    @Autowired 
+    private TicketSoporteService ticketSoporteService;
+
     public Notificacion enviarNotificacionPush(Long destinatarioId, String titulo, String mensaje, Long canalId) {
         Notificacion notificacion = notificacionService.sendNotificacion(destinatarioId, titulo, mensaje, canalId);
         return notificacion;
+    }
+
+    public TicketSoporte ingresarTicket(Long clienteId, Long categoriaId, String asunto, Long pedidoId) throws Exception {
+        TicketSoporte  ticket = ticketSoporteService.ingresarTicket(clienteId, categoriaId, asunto, pedidoId);
+        return ticket;
     }
 }
