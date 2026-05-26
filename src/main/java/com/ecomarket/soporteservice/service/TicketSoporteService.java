@@ -69,10 +69,9 @@ public class TicketSoporteService {
         }
 
         TicketSoporte ticket = new TicketSoporte();
-        
         ticket.setClienteId(clienteId);
         ticket.setCategoria(categoriaValida);
-        ticket.setAsunto(asunto);
+        ticket.setAsunto(asunto.trim());
         ticket.setFechaCreacion(LocalDateTime.now());
         ticket.setPedidoRelacionadoId(pedidoId);
         ticket.setEstado(estadoValido);
@@ -80,9 +79,7 @@ public class TicketSoporteService {
         // El empleado del area requerida tomara el ticket y se le asignara ahi. (OTRO METODO)
         // ticket.setEmpleadoAsignadoId(null);
 
-       return ticketSoporteRepository.save(null);
-
-        
+       return ticketSoporteRepository.save(ticket);
     }
 
 }
