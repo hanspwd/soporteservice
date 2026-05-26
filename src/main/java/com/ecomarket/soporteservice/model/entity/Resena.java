@@ -38,7 +38,7 @@ public class Resena {
 
     @NotNull(message = "La calificacion es obligatoria.")
     @Min(value = 1, message = "La calificacion minima es 1 estrella.")
-    @Max(value = 5, message = "La calificacion maxima es 5 estrellas.")
+    @Max(value = 10, message = "La calificacion maxima es 10 estrellas.")
     @Column(nullable = false)
     private Integer calificacionEstrellas;
 
