@@ -23,7 +23,7 @@ public class SoporteService {
         return notificacion;
     }
 
-    public TicketSoporte ingresarTicket(Long clienteId, Long categoriaId, String asunto, Long pedidoId) throws Exception {
+    public TicketSoporte ingresarTicket(Long clienteId, Long categoriaId, String asunto, Long pedidoId) {
         TicketSoporte  ticket = ticketSoporteService.ingresarTicket(clienteId, categoriaId, asunto, pedidoId);
         return ticket;
     }

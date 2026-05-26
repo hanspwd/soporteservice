@@ -33,7 +33,7 @@ public class TicketSoporteService {
     @Autowired
     private RestTemplate restTemplate;
 
-    public TicketSoporte ingresarTicket(Long clienteId, Long categoriaId, String asunto, Long pedidoId) throws Exception {
+    public TicketSoporte ingresarTicket(Long clienteId, Long categoriaId, String asunto, Long pedidoId) {
 
         // Traer excepcion de estado o de categoria en caso de que se ingrese uno inexistente
         // DEFAULT AL APENAS ABRIR TICKET (ABIERTO)
@@ -48,8 +48,6 @@ public class TicketSoporteService {
         ClienteDTO cliente = restTemplate.getForObject(urlCliente, ClienteDTO.class);
         } catch (HttpClientErrorException.NotFound exNotFound) {
             throw new NoExisteEnBdException("No se puede ingresar el ticket debido a que el id del cliente ingresado no existe en DB.");
-        } catch (Exception ex) {
-            throw new Exception("Error inesperado, no se pudo ingresar el ticket a soporte. Contacte con el administrador del sistema.");
         }
 
         // verificar existencia de pedido
@@ -64,9 +62,7 @@ public class TicketSoporteService {
 
         } catch (HttpClientErrorException exNotFound) {
             throw new NoExisteEnBdException("No se puede ingresar el ticket debido a que el id del pedido ingresado no existe en DB.");
-        } catch (Exception ex) {
-            throw new Exception("Error inesperado, no se pudo ingresar el ticket a soporte. Contacte con el administrador del sistema.");
-        }
+        } 
 
         TicketSoporte ticket = new TicketSoporte();
         ticket.setClienteId(clienteId);
