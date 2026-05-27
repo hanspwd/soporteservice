@@ -8,10 +8,8 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PedidoDTO {
     
-    private Long pedidoId;
+    private Long id;
     private Long clienteId;
     private Double subtotal;
     private Double total;
-    private Long estado;
-    private Long fechaCreacion;
 }

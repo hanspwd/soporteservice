@@ -12,6 +12,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
+import com.ecomarket.soporteservice.client.AnaliticaMetricaClient;
 import com.ecomarket.soporteservice.dto.ClienteDTO;
 import com.ecomarket.soporteservice.dto.PedidoDTO;
 import com.ecomarket.soporteservice.exception.NoExisteEnBdException;
@@ -39,6 +40,15 @@ public class TicketSoporteService {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private AnaliticaMetricaClient analiticaMetricaClient;
+
+    @org.springframework.beans.factory.annotation.Value("${microservicio.usuarios.url}")
+    private String usuariosUrl;
+
+    @org.springframework.beans.factory.annotation.Value("${microservicio.pedidos.url}")
+    private String pedidosUrl;
+
     private static final Logger log = LoggerFactory.getLogger(TicketSoporteService.class);
 
     public List<TicketSoporte> readAllTickets() {
@@ -63,8 +73,8 @@ public class TicketSoporteService {
         EstadoTicket estadoValido = estadoTicketService.findEstadoTicketById(1L);
         CategoriaTicket categoria = categoriaTicketService.findCategoriaTicketById(categoriaId);
 
-        // verificar existencia de cliente
-        String urlCliente = "http://mock-server:8082/clientes/" + clienteId;
+        // verificar existencia de cliente en usuario-service
+        String urlCliente = usuariosUrl + "/api/usuarios/" + clienteId;
 
         try {
         @SuppressWarnings("unused")
@@ -76,8 +86,8 @@ public class TicketSoporteService {
             throw new NoExisteEnBdException("No se pudo validar el cliente debido a que el servicio de usuarios no esta disponible.");
         }
 
-        // verificar existencia de pedido
-        String urlPedido = "http://mock-server:8082/pedidos/" + pedidoId;
+        // verificar existencia de pedido en carritocompraservice
+        String urlPedido = pedidosUrl + "/api/pedido/" + pedidoId;
 
         try {
             PedidoDTO pedido = restTemplate.getForObject(urlPedido, PedidoDTO.class);
@@ -137,7 +147,13 @@ public class TicketSoporteService {
         ticket.setEstado(estadoResuelto);
         ticket.setSolucionResumen(solucionResumen);
         ticket.setFechaCierre(LocalDateTime.now());
-        return ticketSoporteRepository.save(ticket);
+        TicketSoporte saved = ticketSoporteRepository.save(ticket);
+
+        // Registrar metrica en analiticaservice al resolver ticket
+        analiticaMetricaClient.registrarMetrica("soporte.tickets.resueltos", 1.0,
+                "Ticket #" + ticketId + " resuelto: " + solucionResumen);
+
+        return saved;
     }
 
     public void deleteTicketById(Long id) {

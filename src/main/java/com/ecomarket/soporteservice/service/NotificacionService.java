@@ -32,6 +32,9 @@ public class NotificacionService {
     @Autowired
     private CanalNotificacionService canalNotificacionService;
 
+    @org.springframework.beans.factory.annotation.Value("${microservicio.usuarios.url}")
+    private String usuariosUrl;
+
     private static final Logger log = LoggerFactory.getLogger(NotificacionService.class);
 
     public List<Notificacion> readAllNotificacion() {
@@ -60,8 +63,8 @@ public class NotificacionService {
         // Si el canal no es valido envia la excepcion del elseThrow
         CanalNotificacion canalValido = canalNotificacionService.getCanalNotificacionById(canalId);
 
-        // Obtenemos al destinatario por id
-        String url = "http://mock-server:8082/clientes/" + destinatarioId;
+        // Obtenemos al destinatario por id en usuario-service
+        String url = usuariosUrl + "/api/usuarios/" + destinatarioId;
         Notificacion notificacion;
 
         try {
