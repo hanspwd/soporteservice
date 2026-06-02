@@ -12,7 +12,7 @@ public class RestTemplateConfig {
 
     @Bean
     RestTemplate restTemplate() {
-        var factory = java.net.http.HttpClient.newBuilder()
+        var factory = HttpClient.newBuilder()
                 .connectTimeout(Duration.ofSeconds(10))
                 .build();
         var requestFactory = new org.springframework.http.client.JdkClientHttpRequestFactory(factory);
