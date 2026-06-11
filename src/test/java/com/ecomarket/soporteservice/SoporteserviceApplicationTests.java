@@ -10,4 +10,9 @@ class SoporteserviceApplicationTests {
 	void contextLoads() {
 	}
 
+	@Test
+	void testSomething() {
+		SoporteserviceApplication.main(new String[] {});
+	}
+
 }
